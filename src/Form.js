@@ -5,14 +5,15 @@ const StyledPageContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    /* width: 100%; */
 `;
 
 const StyledFormContainer = styled.div`
     width: 50%;
     border: 1px solid #61584b9e;
     padding: .5%;
-
+    h2 {
+        text-align: center;
+    }
     h3{
         background-color: #c9b69a7d;
         padding: 2%;
@@ -20,7 +21,6 @@ const StyledFormContainer = styled.div`
 `;
 
 const StyledFormHeader = styled.section`
-
     div{
         background-image: url('https://images.unsplash.com/photo-1572552635104-daf938e0aa1f?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mjh8fHBpenphfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=400&q=60');
         background-size: cover;
@@ -32,16 +32,13 @@ const StyledFormHeader = styled.section`
 const StyledForm = styled.form`
     display: flex;
     flex-direction: column;
-
     #size-dropdown{
         width: 40%;
     }
-
     #special-text{
         width: 100%;
         line-height: 2;
     }
-
      button{
          margin: 5%;
          width: 50%;
@@ -62,17 +59,17 @@ const StyledForm = styled.form`
 
 `;
 
-export default function Form( { values, update, submit, errors, disabled } ) {
+export default function Form( { values, change, submit, errors, disabled } ) {
     
-    const onChange = evt => {
-        const { name, value, checked, type } = evt.target;
-        const valueToUse = type === 'checkbox' ? checked : value;
-        update(name, valueToUse);
+    const onSubmit = evt => {
+        evt.preventDefault()
+        submit()
     }
 
-    const onSubmit = evt => {
-        evt.preventDefault();
-        submit();
+    const onChange = evt => {
+        const { name, value, checked, type } = evt.target
+        const valueToUse = type === 'checkbox' ? checked : value
+        change(name, valueToUse)
     }
 
     return(
@@ -83,8 +80,6 @@ export default function Form( { values, update, submit, errors, disabled } ) {
                     <div aria-label='[person putting toppings on a pizza]' role='img'></div>
                 </StyledFormHeader>
                 <StyledForm id='pizza-form' onSubmit={onSubmit}>
-                        <h2>Build Your Own Pizza</h2>
-
                         <h3>Your Name</h3>
                         <label>
                             <input 
@@ -94,6 +89,7 @@ export default function Form( { values, update, submit, errors, disabled } ) {
                                 value={values.customerName}
                                 onChange={onChange}
                                 id='name-input'
+                                data-test='customerName'
                             />
                         </label>
                         <div>{errors.customerName}</div>
@@ -102,15 +98,18 @@ export default function Form( { values, update, submit, errors, disabled } ) {
                         {/*/////// SIZE ///////*/}
                         {/*/////// SIZE ///////*/}
                         <h3>Choice of Size</h3>
-                        <select 
-                            id='size-dropdown'
-                            onChange={onChange}
-                            name='size'>
-                                <option value=''>-- Select Size --</option>
-                                <option>Small</option>
-                                <option>Medium</option>
-                                <option>Large</option>
-                        </select>
+                        <label>
+                            <select 
+                                id='size-dropdown'
+                                onChange={onChange}
+                                value={values.size}
+                                name='size'>
+                                    <option value=''>-- Select Size --</option>
+                                    <option value='small'>Small</option>
+                                    <option value='medium'>Medium</option>
+                                    <option value='large'>Large</option>
+                            </select>
+                        </label>
                         <div>{errors.size}</div>
 
                         {/*/////// SAUCES ///////*/}
@@ -157,7 +156,6 @@ export default function Form( { values, update, submit, errors, disabled } ) {
                             />
                             &nbsp;Spinach Alfredo
                         </label>
-                        <div>{errors.sauce}</div>
 
                         {/*/////// TOPPINGS ///////*/}
                         {/* ///////TOPPINGS ///////*/}
@@ -168,9 +166,8 @@ export default function Form( { values, update, submit, errors, disabled } ) {
                             <input 
                                 type='checkbox'
                                 name='pepperoni'
-                                // value='pepperoni'
-                                // // onChange={onChange}
-                                // // checked={values.pepperoni}
+                                onChange={onChange}
+                                checked={values.pepperoni}
                             />
                             &nbsp;Pepperoni
                         </label>
@@ -178,7 +175,6 @@ export default function Form( { values, update, submit, errors, disabled } ) {
                             <input 
                                 type='checkbox'
                                 name='sausage'
-                                value='sausage'
                                 onChange={onChange}
                                 checked={values.sausage}
                             />
@@ -188,7 +184,6 @@ export default function Form( { values, update, submit, errors, disabled } ) {
                             <input 
                                 type='checkbox'
                                 name='onions'
-                                value='onions'
                                 onChange={onChange}
                                 checked={values.onions}
                             />
@@ -198,7 +193,6 @@ export default function Form( { values, update, submit, errors, disabled } ) {
                             <input 
                                 type='checkbox'
                                 name='greenPepper'
-                                value='greenPepper'
                                 onChange={onChange}
                                 checked={values.greenPepper}
                             />
@@ -208,7 +202,6 @@ export default function Form( { values, update, submit, errors, disabled } ) {
                             <input 
                                 type='checkbox'
                                 name='blackOlives'
-                                value='blackOlives'
                                 onChange={onChange}
                                 checked={values.blackOlives}
                             />
@@ -218,7 +211,6 @@ export default function Form( { values, update, submit, errors, disabled } ) {
                             <input 
                                 type='checkbox'
                                 name='mushroom'
-                                value='mushroom'
                                 onChange={onChange}
                                 checked={values.mushroom}
                             />
@@ -228,7 +220,6 @@ export default function Form( { values, update, submit, errors, disabled } ) {
                             <input 
                                 type='checkbox'
                                 name='pineapple'
-                                value='pineapple'
                                 onChange={onChange}
                                 checked={values.pineapple}
                             />
@@ -238,7 +229,6 @@ export default function Form( { values, update, submit, errors, disabled } ) {
                             <input 
                                 type='checkbox'
                                 name='artichokeHearts'
-                                value='artichokeHearts'
                                 onChange={onChange}
                                 checked={values.artichokeHearts}
                             />
@@ -257,6 +247,7 @@ export default function Form( { values, update, submit, errors, disabled } ) {
                                 id='special-text'
                                 value={values.specialInstructions}
                                 onChange={onChange}
+                                data-test='specialInstructions'
                             />
                         </label>
 
