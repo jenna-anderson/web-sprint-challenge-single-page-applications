@@ -1,14 +1,14 @@
-export default function Form( { values, update, submit } ) {
+export default function Form( { values, update, submit, errors, disabled } ) {
     
     const onChange = evt => {
-        const { name, value, checked, type } = evt.target
-        const valueToUse = type === 'checkbox' ? checked : value
-        update(name, valueToUse)
+        const { name, value, checked, type } = evt.target;
+        const valueToUse = type === 'checkbox' ? checked : value;
+        update(name, valueToUse);
     }
 
     const onSubmit = evt => {
-        evt.preventDefault()
-        submit()
+        evt.preventDefault();
+        submit();
     }
 
     return(
@@ -34,6 +34,7 @@ export default function Form( { values, update, submit } ) {
                             onChange={onChange}
                         />
                     </label>
+                    <div>{errors.customerName}</div>
 
                     {/*/////// SIZE ///////*/}
                     {/*/////// SIZE ///////*/}
@@ -43,10 +44,12 @@ export default function Form( { values, update, submit } ) {
                         id='size-dropdown'
                         onChange={onChange}
                         name='size'>
+                            <option value=''>-- Select Size --</option>
                             <option>Small</option>
                             <option>Medium</option>
                             <option>Large</option>
                     </select>
+                    <div>{errors.size}</div>
 
                     {/*/////// SAUCES ///////*/}
                     {/*/////// SAUCES ///////*/}
@@ -88,6 +91,7 @@ export default function Form( { values, update, submit } ) {
                             checked={values.sauce === 'spinachAlfredo'}
                         />
                     </label>
+                    <div>{errors.sauce}</div>
 
                     {/*/////// TOPPINGS ///////*/}
                     {/* ///////TOPPINGS ///////*/}
@@ -184,7 +188,7 @@ export default function Form( { values, update, submit } ) {
                     {/*///// ADD TO ORDER BUTTON /////*/}
                     {/*///// ADD TO ORDER BUTTON /////*/}
                     {/*///// ADD TO ORDER BUTTON /////*/}
-                    <button id='order-button'>Add to Order</button>
+                    <button id='order-button' disabled={disabled}>Add to Order</button>
                 </div>
             </form>
         </div>
