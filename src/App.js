@@ -2,9 +2,37 @@ import React, { useState, useEffect } from "react";
 import { Route, Link, Switch, Router } from 'react-router-dom'
 import Home from './Home'
 import Form from './Form'
+import Order from './Order'
 import axios from 'axios'
 import * as yup from 'yup'
 import schema from './validation/formSchema'
+import styled from 'styled-components'
+import './App.css'
+
+const StyledContainer = styled.div`
+
+`;
+const StyledHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+
+  h1{
+    margin: 2%;
+  }
+  
+`;
+
+const StyledNav = styled.nav`
+  display: flex;
+  justify-content: space-around;
+  width: 25%;
+
+  a{
+    text-decoration: none;
+    color: black;
+  }
+`;
 
 const initialOrder = []
 
@@ -53,6 +81,7 @@ const App = () => {
   const postNewOrder = newOrder => {
     axios.post('https://reqres.in/api/orders', newOrder)
     .then(res => {
+      console.log(res.data)
       setOrder([res.data, ...order])
     })
     .catch(err => {
@@ -78,20 +107,26 @@ const App = () => {
   }, [formValues])
 
   return (
-    <>
+    <StyledContainer>
+    <StyledHeader>
       <h1>Lambda Eats</h1>
-      <nav>
+      <StyledNav>
         <Link to='/'>Home</Link>
         <Link to='/pizza'>Pizza</Link>
-      </nav>
+      </StyledNav>
+    </StyledHeader>
 
       <Route exact path='/' component={Home} />
       <Route exact path='/pizza'>
         <Form values={formValues} update={update} submit={submit} errors={formErrors} disabled={disabled}/>
       </Route>
 
+    
+      <Order key={order.id} details={order}/>
+    
+
       
-    </>
+    </StyledContainer>
   );
 };
 export default App;
